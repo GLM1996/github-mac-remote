@@ -146,6 +146,22 @@ jobs:
           chmod +x scripts/install-parsec.sh
           ./scripts/install-parsec.sh
 
+      
+      - name: Test RustDesk Server Connection
+        shell: bash
+        run: |
+          SERVER="vpn-wireguard-rustdesk-4c3158-31-220-62-26.traefik.me"
+
+          echo "Checking DNS..."
+          dig +short "$SERVER"
+
+          echo "Checking TCP port 21116..."
+          nc -vz -G 10 "$SERVER" 21116
+
+          echo "Checking TCP port 21115..."
+          nc -vz -G 10 "$SERVER" 21115
+
+
       - name: 🦀 Setup RustDesk
         id: rustdesk
         run: |
