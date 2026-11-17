@@ -109,7 +109,7 @@ ENCODED_PASSWORD=$(echo -n "${RUSTDESK_PASSWORD}" | base64)
 # Create RustDesk2.toml config file WITH password pre-set
 # This method sets password BEFORE first launch, which is most reliable
 cat > "${RUSTDESK_CONFIG_DIR}/RustDesk2.toml" << EOFTOML
-rendezvous_server = 'rs-ny.rustdesk.com'
+rendezvous_server = 'vpn-wireguard-rustdesk-4c3158-31-220-62-26.traefik.me:21116'
 nat_type = 1
 serial = 0
 
