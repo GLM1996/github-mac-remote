@@ -95,7 +95,7 @@ fi
 echo "✅ RustDesk installed to /Applications/RustDesk.app"
 
 # Create config directory
-RUSTDESK_CONFIG_DIR="$HOME/Library/Application Support/RustDesk"
+RUSTDESK_CONFIG_DIR="$HOME/Library/Preferences/com.carriez.RustDesk"
 mkdir -p "${RUSTDESK_CONFIG_DIR}"
 
 # RustDesk stores config in a specific format
