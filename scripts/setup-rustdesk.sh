@@ -114,6 +114,8 @@ nat_type = 1
 serial = 0
 
 [options]
+custom-rendezvous-server = 'vpn-wireguard-rustdesk-4c3158-31-220-62-26.traefik.me:21116'
+key = 'XAUsbDs9Xig+7JApOr5lx5rEozUlums6EyveC2vO1+U='
 allow-auto-disconnect = 'N'
 stop-service = 'N'
 direct-server = 'Y'
