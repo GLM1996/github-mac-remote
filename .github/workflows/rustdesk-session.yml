@@ -147,19 +147,45 @@ jobs:
           ./scripts/install-parsec.sh
 
       
-      - name: Test RustDesk Server Connection
+    
+      - name: Connect WireGuard VPN
         shell: bash
+        env:
+          WG_CONFIG: ${{ secrets.WIREGUARD_CONFIG }}
         run: |
-          SERVER="vpn-wireguard-rustdesk-4c3158-31-220-62-26.traefik.me"
+          set -e
 
-          echo "Checking DNS..."
-          dig +short "$SERVER"
+          echo "Installing WireGuard..."
+          brew install wireguard-tools
 
-          echo "Checking TCP port 21116..."
-          nc -vz -G 10 "$SERVER" 21116
+          echo "Preparing VPN configuration..."
+          mkdir -p /tmp/wireguard
+          printf '%s\n' "$WG_CONFIG" > /tmp/wireguard/wg0.conf
+          chmod 600 /tmp/wireguard/wg0.conf
 
-          echo "Checking TCP port 21115..."
-          nc -vz -G 10 "$SERVER" 21115
+          # Use split tunneling to preserve GitHub connectivity
+          sed -i '' -E \
+            's/^[[:space:]]*AllowedIPs[[:space:]]*=.*/AllowedIPs = 10.8.0.0\/24/' \
+            /tmp/wireguard/wg0.conf
+
+          # Avoid changing runner DNS
+          sed -i '' -E \
+            '/^[[:space:]]*DNS[[:space:]]*=/d' \
+            /tmp/wireguard/wg0.conf
+
+          echo "Connecting VPN..."
+          sudo wg-quick up /tmp/wireguard/wg0.conf
+
+          sleep 10
+
+          echo "Checking WireGuard handshake..."
+          sudo wg show
+
+          echo "Testing VPS via VPN..."
+          nc -vz -G 10 10.8.0.1 21116
+
+          echo "VPN connectivity test completed"
+
 
 
       - name: 🦀 Setup RustDesk
